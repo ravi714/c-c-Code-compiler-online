@@ -1,0 +1,172 @@
+<html>
+
+<head>
+    <title>code compile</title>
+    <link rel="stylesheet" href="./src/codemirror.css">
+    <link rel="stylesheet" href="./theme/dracula.css">
+    <script src="src/codemirror.js"></script>
+    <script src="./mode/clike/clike.js"></script>
+</head>
+
+<body>
+    <div class="main_wrap">
+        <div class="inou_wrap">
+            <div spellcheck="false" id="code"></div>
+            <div id="output"></div>
+        </div>
+        <div class="btn_wrap">
+            <textarea value="" placeholder="Any input for programe" id="input"></textarea>
+            <select name="lang" class="btn_hover" id="lang">
+                <option value="c" selected>C</option>
+                <option value="cpp">C++</option>
+            </select>
+            <button onclick="runcode()" class="btn_hover">Run Code</button>
+        </div>
+
+    </div>
+</body>
+
+<script>
+
+    function runcode() {
+        document.getElementById("output").innerHTML = "Wait..."
+        fetch('main.php', {
+            method: "POST",
+            headers: {
+                'Content-type': 'application/text'
+            },
+            body: JSON.stringify({ "code": editor.getValue(), "input": document.getElementById("input").value,"lang":document.querySelector("#lang").value })
+        }).then((data) => data.text()).then((res) => {
+            document.getElementById("output").innerHTML = res
+        }).catch((e) => {
+            alert(e)
+        })
+    }
+</script>
+<script>
+    var editor = CodeMirror(document.getElementById('code'), {
+        mode: "text/x-csrc",
+        theme: "dracula",
+        lineNumbers: true
+    });
+</script>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    @font-face {
+        font-family: fira_code;
+        src: url(ttf/FiraCode-Regular.ttf);
+    }
+
+    .main_wrap {
+        width: 100%;
+    }
+
+    .inou_wrap {
+        width: 100%;
+        box-sizing: border-box;
+        /* width: fit-content; */
+        /* border: 2px solid red; */
+        display: flex;
+        flex-direction: row;
+        gap: 30px;
+        padding: 10px;
+
+    }
+
+    #output {
+        width: 49%;
+        height: 80vh;
+        padding: 10px;
+        border: 2px solid;
+        font-family: fira_code;
+
+    }
+
+    #output pre {
+        width: 100%;
+        font-family: fira_code;
+        text-overflow: none;
+        overflow: scroll;
+        height: 100%;
+    }
+
+    #code {
+        font-family: fira_code;
+        padding: 10px;
+        border: 2px solid;
+        width: 49%;
+        height: 80vh;
+        background: #282a36;
+    }
+
+    .btn_wrap {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        /* border: 2px solid red; */
+        padding-left: 10px;
+        box-sizing: border-box;
+        /* height: auto; */
+    }
+
+    #input {
+        resize: none;
+        width: 200px;
+        padding: 0 10px;
+    }
+    #lang{
+        width: 80px;
+        display: flex;
+        align-items: flex-start;
+        text-align: center;
+        height: 50px;
+        border: 2px solid #5800FF;
+        border-radius: 5px;
+        background-color: white;
+        color: #5800FF;
+        font-size: 20px;
+        /* background-color: red; */
+    }
+    .btn_wrap button {
+
+        border: 2px solid #5800FF;
+        color: #5800FF;
+        background: white;
+        border-radius: 5px;
+        font-size: 20px;
+        outline: none;
+        height: 50px;
+        width: 150px;
+    }
+
+    .btn_wrap .btn_hover:hover {
+
+        border: 2px solid #5800FF;
+        cursor: pointer;
+        color: white;
+        background-color: #5800FF;
+        border-radius: 5px;
+        transition: all 1s;
+        font-size: 20px;
+        outline: none;
+        height: 50px;
+        width: 150px;
+    }
+
+    .CodeMirror {
+        font-family: fira_code;
+        min-width: 100%;
+        max-width: 100% !important;
+        min-height: 100px;
+        max-height: 80vh;
+    }
+</style>
+
+</html>
